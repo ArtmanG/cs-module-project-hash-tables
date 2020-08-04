@@ -9,7 +9,6 @@ Task: Implement a basic hash table without collision resolution.
 2. Implement a good hashing function.
 
    Recommend either of:
-
    * DJB2
    * FNV-1 (64-bit)
 
