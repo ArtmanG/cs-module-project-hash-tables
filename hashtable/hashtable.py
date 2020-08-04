@@ -21,7 +21,9 @@ class HashTable:
     """
 
     def __init__(self, capacity):
+        # total slots in the array
         self.capacity = capacity
+        # items currently in array default is None in each slot
         self.storage = [None] * capacity
 
 
@@ -35,6 +37,7 @@ class HashTable:
 
         Implement this.
         """
+        # Length of hash table
         return self.capacity
 
 
@@ -79,8 +82,8 @@ class HashTable:
         Take an arbitrary key and return a valid integer index
         between within the storage capacity of the hash table.
         """
-        #return self.fnv1(key) % self.capacity
-        return self.djb2(key) % self.capacity
+        return self.fnv1(key) % self.capacity
+        # return self.djb2(key) % self.capacity
 
     def put(self, key, value):
         """
@@ -90,7 +93,9 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        index = self.hash_index(key)
+        entry = HashTableEntry(key, value)
+        self.storage[index] = entry
 
 
     def delete(self, key):
@@ -101,7 +106,8 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        index = self.hash_index(key)
+        self.storage[index].value = None
 
 
     def get(self, key):
@@ -112,7 +118,8 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        index = self.hash_index(key)
+        return self.storage[index].value
 
 
     def resize(self, new_capacity):
@@ -122,7 +129,7 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        pass
 
 
 
