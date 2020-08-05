@@ -25,6 +25,8 @@ class HashTable:
         self.capacity = capacity
         # items currently in array default is None in each slot
         self.storage = [None] * capacity
+        # total to track number of things added into this hash table
+        self.total = 0
 
 
     def get_num_slots(self):
@@ -47,7 +49,7 @@ class HashTable:
 
         Implement this.
         """
-        pass
+        return self.total / self.capacity
 
 
     def fnv1(self, key):
@@ -93,9 +95,41 @@ class HashTable:
 
         Implement this.
         """
+        
+        # use the key to get the index
         index = self.hash_index(key)
-        entry = HashTableEntry(key, value)
-        self.storage[index] = entry
+        # var for what is at the index
+        current = self.storage[index]
+
+        # if there is something at the current index
+        if current:
+            # while at the current
+            while current:
+                # if the current's key equals the input key 
+                if current.key == key:
+                    # overwrite the value
+                    current.value = value
+                    return
+                # if there is a next
+                if current.next:
+                    # the next is now the current and we start again
+                    current = current.next
+                # once we check that all the keys are original and we still have this one, add it to the end of the list
+                else:
+                    current.next = HashTableEntry(key, value)
+                    # we added something, up the total
+                    self.total += 1
+                    
+        # nothing is at this index, add it          
+        else:
+            self.storage[index] = HashTableEntry(key, value)
+            # we added something, up the total
+            self.total += 1
+
+        # check if we are running out of space in our hash table
+        if self.get_load_factor() >= 0.7:
+            # double the size
+            self.resize(self.capacity * 2)
 
 
     def delete(self, key):
@@ -106,8 +140,34 @@ class HashTable:
 
         Implement this.
         """
+        # use the key to get the index
         index = self.hash_index(key)
-        self.storage[index].value = None
+        # var for what is at the index
+        current = self.storage[index]
+
+        # if there is something at the current index
+        if current:
+            # while there is something at the current 
+            while current:
+                # if the current's key equals the key we are looking for
+                if current.key == key:
+                    # the total things in the hash table is one less
+                    self.total -= 1
+                    # delete it from the list (the index here is now equal to what was the next index) 
+                    self.storage[index] = current.next
+                    # check if the capacity is too big. (like is it double the initial array size)
+                    if self.capacity > 16:
+                        self.resize(self.capacity / 2)
+                    return
+                # else we move on to the next one and check again
+                elif current.next:
+                    current = current.next
+                # else it wasn't there and we can't delete anything
+                else:
+                    return
+        # nothing to delete
+        else:
+            return    
 
 
     def get(self, key):
@@ -118,8 +178,23 @@ class HashTable:
 
         Implement this.
         """
-        index = self.hash_index(key)
-        return self.storage[index].value
+        current = self.storage[self.hash_index(key)]
+
+        # if there is something at current
+        if current:
+            # while there is a next
+            while current.next:
+                # if the currents key matches the 
+                if current.key == key:
+                    return current.value
+                # else move on to the next
+                else:
+                    current = current.next
+            # when there is no next
+            if current.key == key:
+                return current.value
+        # either you've found what you are looking for or you are returning None
+        return
 
 
     def resize(self, new_capacity):
@@ -129,7 +204,27 @@ class HashTable:
 
         Implement this.
         """
-        pass
+        # set the previous storage as the current storage
+        prev_storage = self.storage
+        # the capacity is now the new capacity
+        self.capacity = new_capacity
+        # the current storage becomes the new storage by none * new capacity
+        self.storage = [None] * new_capacity
+        
+        # loop through in the old storage
+        for index in prev_storage:
+            # if the index has anything in it
+            if index:
+                # set the new index for it in the new storage by hashing again 
+                self.storage[self.hash_index(index.key)] = index
+                # does this have a next? is it part of a linked list
+                current = index.next
+                # if it does
+                while current:
+                    # rehash it and give it a new index
+                    self.storage[self.hash_index(current.key)] = current
+                    # do it all again until there is no next
+                    current = current.next
 
 
 
