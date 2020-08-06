@@ -103,7 +103,7 @@ class HashTable:
 
         # if there is something at the current index
         if current:
-            # while at the current
+            # while there is something at the current
             while current:
                 # if the current's key equals the input key 
                 if current.key == key:
