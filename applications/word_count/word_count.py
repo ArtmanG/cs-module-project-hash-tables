@@ -1,5 +1,18 @@
-def word_count(s):
+def word_count(string):
     # Your code here
+    cache = {}
+
+    words = string.lower.split(' ')
+    for word in words:
+        if word == '':
+            pass
+        elif  word not in cache:
+            cache[word] = 1
+        else:
+            cache[word] += 1
+    
+    return cache
+
 
 
 

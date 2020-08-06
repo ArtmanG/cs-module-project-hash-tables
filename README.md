@@ -9,12 +9,11 @@ Task: Implement a basic hash table without collision resolution.
 2. Implement a good hashing function.
 
    Recommend either of:
-
    * DJB2
    * FNV-1 (64-bit)
 
    You are allowed to Google for these hashing functions and implement
-   from psuedocode.
+   from pseudo-code.
 
 3. Implement the `hash_index()` that returns an index value for a key.
 
